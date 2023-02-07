@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#leaderboard > div:nth-child(1) {
+  @apply border-b-2 border-yellow-500;
+}
+
+
+#leaderboard > div:nth-child(2) {
+  @apply border-2 border-gray-500;
+}
+
+
+#leaderboard > div:nth-child(3) {
+  @apply border-2 border-[#cd7f32];
+}
+
+
+#leaderboard > :first-child:before {
+  background-image: url(/images/crown.gif);
+  content: "";
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  z-index: 999;
+  top: 0px;
+  left: 0px;
+}
