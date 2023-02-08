@@ -1,6 +1,8 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
 
 const Home: NextPage = () => {
   const { data: sessionData } = useSession()
@@ -17,13 +19,17 @@ const Home: NextPage = () => {
       </Head>
       <div className="hero min-h-screen bg-base-200">
         <div className="hero-content flex-col lg:flex-row">
-          <img src="/images/icon.png" className="rounded-lg shadow-2xl" />
+          <Image src="/images/icon.png" alt="icon" className="rounded-lg shadow-2xl" width={200} height={200} />
           <div>
             <h1 className="text-5xl font-bold">C r h j p contest</h1>
             <div>
               {sessionData?.user ?
                 <div>
-                  <div><a href="/results" className="link link-hover">See results</a></div>
+                  <div>
+                    <Link href="/results" className="link lin-hover">
+                      See results
+                    </Link>
+                  </div>
                   <button
                     onClick={() => signOut()}
                     className="btn btn-success">

@@ -1,4 +1,5 @@
-import { NextPage } from "next";
+import { type NextPage } from "next";
+import Link from "next/link";
 import { api } from "../../../utils/api";
 
 const Page: NextPage = () => {
@@ -11,7 +12,9 @@ const Page: NextPage = () => {
   return (
     <div className="m-4">
       <div className="flex justify-end mb-2">
-        <a role="button" href="/admin/participants/new" className="btn btn-primary">New Participant</a>
+        <Link href="/admin/participants/new" className="btn btn-primary">
+          New Participant
+        </Link>
       </div>
       <table className="table w-full">
         <thead>
@@ -23,7 +26,7 @@ const Page: NextPage = () => {
         </thead>
         <tbody>
           {participants.data.map((participant) =>
-            <tr>
+            <tr key={participant.id}>
               <td>{participant.username}</td>
               <td>{participant.discriminator}</td>
               <td>{participant._count.submissions}</td>
@@ -35,4 +38,4 @@ const Page: NextPage = () => {
   )
 }
 
-export default Page;
+export default Page

@@ -71,7 +71,6 @@ async function main() {
   ]
 
   participants.forEach(async (participant) => {
-    console.log("SAVING!", participant)
     await prisma.participant.create({
       data: {
         ...participant.data,

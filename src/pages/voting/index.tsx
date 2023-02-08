@@ -1,5 +1,7 @@
-import { NextPage } from "next";
+import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Results from "../../components/Results";
@@ -8,7 +10,7 @@ import { api } from "../../utils/api";
 function ImageCard({ url, index }: { url: string, index: number }) {
   return (
     <div id={`item${index + 1}`} className="carousel-item w-full">
-      <img src={url} className="w-full h-96 object-fit rounded-sm" />
+      <Image className="w-full h-96 object-fit rounded-sm" src={url} alt="submission" width={500} height={500} />
     </div>
   )
 }
@@ -20,7 +22,11 @@ function SubmissionCarousel({ urls }: { urls: string[] }) {
         {urls.map((url, index) => <ImageCard key={index} url={url} index={index} />)}
       </div>
       <div className="flex justify-center w-full py-2 gap-2">
-        {urls.map((_url, index) => <a key={index} href={`#item${index + 1}`} className="btn btn-xs">{index + 1}</a>)}
+        {urls.map((_url, index) =>
+          <Link key={index} href={`#item${index + 1}`} className="btn btn-xs">
+            {index + 1}
+          </Link>
+        )}
       </div>
     </>
   )
@@ -33,13 +39,13 @@ type RulesProps = {
 function Rules({ setAcceptedRules }: RulesProps) {
   const router = useRouter()
 
-  function handleClick() {
+  async function handleClick() {
     setAcceptedRules(true)
     const url = {
       path: router.pathname,
       hash: '#item1'
     }
-    router.push(url)
+    await router.push(url)
   }
   return (
     <div className="hero">
@@ -99,20 +105,20 @@ const Page: NextPage = () => {
   })
   const [acceptedRules, setAcceptedRules] = useState(false)
   const participants = api.participant.findForVoting.useQuery({
-      // @ts-ignore
-    username: user.data.username,
     // @ts-ignore
-    discriminator: user.data.discriminator as string
+    username: user?.data?.username,
+    // @ts-ignore
+    discriminator: user?.data?.discriminator as string
   }, {
     enabled: user.data != null && user.data.username != null
   })
   const [votingIndex, setVotingIndex] = useState(0)
 
   const { mutate } = api.vote.cast.useMutation({
-    onSuccess: () => {
+    onMutate: () => {
       setVotingIndex(currentVotingIndex => currentVotingIndex += 1)
       router.push("/voting#item1")
-    }
+    },
   })
 
   const { mutate: updateDiscordMutate } = api.user.updateDiscordData.useMutation({
@@ -122,7 +128,6 @@ const Page: NextPage = () => {
   })
 
   async function fetchUsername(accessToken: string) {
-    console.log("fetchinmg username for access token", accessToken)
     const resp = await fetch("https://discord.com/api/users/@me", {
       headers: {
         "Authorization": `Bearer ${accessToken}`
@@ -137,10 +142,9 @@ const Page: NextPage = () => {
   }
 
   useEffect(() => {
-    if (!user.data) return;
-    if (user.data.username) return;
+    if (user == null || user.data == null || user.data.username != null) return;
 
-    if (user.data.accounts.length == 0 && user.data.accounts[0]?.access_token) {
+    if (user.data.accounts.length > 0 && user.data.accounts[0]?.access_token) {
       fetchUsername(user.data.accounts[0].access_token)
     }
   }, [user])

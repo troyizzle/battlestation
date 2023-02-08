@@ -1,11 +1,11 @@
-import { NextPage } from "next"
-import { SubmitHandler, useFieldArray, useForm } from "react-hook-form"
+import { type NextPage } from "next"
+import { type SubmitHandler, useFieldArray, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { CreateParticipantInput, createParticipantSchema } from "../../../schema/participant.schema"
+import { type CreateParticipantInput, createParticipantSchema } from "../../../schema/participant.schema"
 import { api } from "../../../utils/api"
 import { useToast } from "../../../context/ToastContex"
 import { useRouter } from "next/router"
-import { CreateSubmissionSchema } from "../../../schema/submission.schema"
+import { type CreateSubmissionSchema } from "../../../schema/submission.schema"
 
 const Page: NextPage = () => {
   const { addToasts } = useToast()
@@ -32,8 +32,8 @@ const Page: NextPage = () => {
   })
 
   const { mutate } = api.participant.create.useMutation({
-    onSuccess: () => {
-      router.push("/admin/participants/")
+    onSuccess: async () => {
+      await router.push("/admin/participants/")
       addToasts("Participant added")
     },
     onError: (err) => {
@@ -41,7 +41,6 @@ const Page: NextPage = () => {
     }
   })
 
-  // TODO: How to write this as a function?
   const onSubmit: SubmitHandler<CreateParticipantInput> = (data) => mutate(data);
 
   return (

@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import Image from "next/image";
 import { api } from "../../utils/api";
 
 type dataMapped = {
@@ -7,7 +7,8 @@ type dataMapped = {
   totalRating: number,
   votes: {
     username: string,
-    rating: number
+    rating: number,
+    image: string | null
   }[]
 }
 
@@ -23,7 +24,12 @@ function VotingTable({ votes }: { votes: dataMapped["votes"] }) {
       <tbody>
         {votes.map((vote, indx) =>
           <tr key={indx}>
-            <td>{vote.username}</td>
+            <td>
+            <div className="flex items-center">
+              {vote.username}
+              {vote.image && <Image width={16} height={16} src={vote.image}  className="mt-1 rounded-full" alt="avatar" /> }
+            </div>
+            </td>
             <td>{vote.rating}</td>
           </tr>
         )}
@@ -39,13 +45,11 @@ function ResultRow({ username, image, totalRating, votes }: dataMapped) {
         <input type="checkbox" />
         <div className="collapse-title w-full text-xs md:text-xl font-medium">
           <div className="flex items-center justify-between space-x-3">
-            <div className="flex items-center">
-              <div className="font-bold">{username}</div>
-              <div className="avatar ml-2">
+            <div className="flex items-center max-w-[1em]">
+              <div className="font-bold text-lg">{username}</div>
+              <div className="avatar">
                 <div className="mask mask-squircle w-8 h-8 md:w-12 md:h-12">
-                  {image &&
-                    <img src={image} alt="Avatar Tailwind CSS Component" />
-                  }
+                  {image && <Image src={image} alt="avatar" width={32} height={32} /> }
                 </div>
               </div>
             </div>
@@ -74,10 +78,11 @@ export default function Results() {
 
   participants.data.forEach((participant) => {
     const obj = dataArray.find(el => el.username == participant.username)
-    const { rating, image, votingusername, username } = participant
+    const { rating, image, votingusername, username, votinguserimage } = participant
     const data = {
       username: votingusername,
-      rating: rating
+      rating: rating,
+      image: votinguserimage
     }
 
     if (obj) {
