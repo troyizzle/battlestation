@@ -13,6 +13,7 @@ type dataMapped = {
 }
 
 function VotingTable({ votes }: { votes: dataMapped["votes"] }) {
+  const sortedVotes = votes.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))
   return (
     <table className="table w-full">
       <thead>
@@ -22,7 +23,7 @@ function VotingTable({ votes }: { votes: dataMapped["votes"] }) {
         </tr>
       </thead>
       <tbody>
-        {votes.map((vote, indx) =>
+        {sortedVotes.map((vote, indx) =>
           <tr key={indx}>
             <td>
               <div className="flex items-center">
