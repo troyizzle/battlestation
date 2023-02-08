@@ -18,7 +18,7 @@ function VotingTable({ votes }: { votes: dataMapped["votes"] }) {
     <table className="table w-full">
       <thead>
         <tr>
-          <th>Userame</th>
+          <th>Username</th>
           <th>Rating</th>
         </tr>
       </thead>
