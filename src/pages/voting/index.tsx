@@ -115,7 +115,7 @@ const Page: NextPage = () => {
   const [votingIndex, setVotingIndex] = useState(0)
 
   const { mutate } = api.vote.cast.useMutation({
-    onMutate: () => {
+    onSuccess: () => {
       setVotingIndex(currentVotingIndex => currentVotingIndex += 1)
       router.push("/voting#item1")
     },
