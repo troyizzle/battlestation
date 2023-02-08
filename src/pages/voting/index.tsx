@@ -4,13 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import Results from "../../components/Results";
 import { api } from "../../utils/api";
 
 function ImageCard({ url, index }: { url: string, index: number }) {
   return (
     <div id={`item${index + 1}`} className="carousel-item w-full">
-      <Image className="w-full h-96 object-fit rounded-sm" src={url} alt="submission" width={500} height={500} />
+      <Image alt="submission photo" className="w-full h-96" height={960} src={url} width={1280} />"
     </div>
   )
 }
@@ -18,8 +17,10 @@ function ImageCard({ url, index }: { url: string, index: number }) {
 function SubmissionCarousel({ urls }: { urls: string[] }) {
   return (
     <>
+    <div className="max-w-4xl">
       <div className="carousel w-full px-1">
         {urls.map((url, index) => <ImageCard key={index} url={url} index={index} />)}
+      </div>
       </div>
       <div className="flex justify-center w-full py-2 gap-2">
         {urls.map((_url, index) =>
@@ -115,9 +116,13 @@ const Page: NextPage = () => {
   const [votingIndex, setVotingIndex] = useState(0)
 
   const { mutate } = api.vote.cast.useMutation({
-    onSuccess: () => {
-      setVotingIndex(currentVotingIndex => currentVotingIndex += 1)
-      router.push("/voting#item1")
+    onSuccess: async () => {
+      if (votingIndex + 1 >= participants.data?.length) {
+        await router.push("/results")
+      } else {
+        setVotingIndex(currentVotingIndex => currentVotingIndex += 1)
+        await router.push("/voting#item1")
+      }
     },
   })
 
@@ -139,6 +144,10 @@ const Page: NextPage = () => {
       username: data.username,
       discriminator: data.discriminator
     })
+  }
+
+  async function redirectToResults() {
+    await router.push("/results")
   }
 
   useEffect(() => {
@@ -163,11 +172,6 @@ const Page: NextPage = () => {
   }
 
   const currentParticipant = participants.data[votingIndex]
-
-  if (currentParticipant == undefined) {
-    router.push("/results")
-    return <Results />
-  }
 
   return (
     <div>

@@ -17,7 +17,7 @@ export const participantRouter = createTRPCRouter({
     );
   }),
   getAllVoteData: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.$queryRaw<{ username: string, image: string | null, rating: number, votingusername: string, votinguserimage: string | null }[]>(
+    return ctx.prisma.$queryRaw<{ username: string, image: string | null, rating: number | null, votingusername: string, votinguserimage: string | null }[]>(
       Prisma.sql`
         SELECT "Participant"."username",
         "User"."image",
