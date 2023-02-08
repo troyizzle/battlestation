@@ -77,7 +77,6 @@ export default function Results() {
   }
 
   const dataArray: dataMapped[] = []
-  console.log(participants.data)
 
   participants.data.forEach((participant) => {
     const obj = dataArray.find(el => el.username == participant.username)
