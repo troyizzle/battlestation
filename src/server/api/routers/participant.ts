@@ -60,10 +60,10 @@ export const participantRouter = createTRPCRouter({
         NOT: {
           username: input.username,
           discriminator: input.discriminator,
-          votes: {
-            some: {
-              userId: ctx.session.user.id
-            }
+        },
+        votes: {
+          none: {
+            userId: ctx.session.user.id
           }
         }
       },
